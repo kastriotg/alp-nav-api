@@ -177,7 +177,10 @@ class Alp_Nav_Api {
 	 * @since    1.0.0
 	 */
 	public function run() {
+		require_once plugin_dir_path(__FILE__) . 'cpt/class-alp-nav-api-cpt-brands.php';
+		require_once plugin_dir_path(__FILE__) . 'cpt/class-alp-nav-api-cpt-locations.php';
 		add_action('init', array('Alp_Nav_Api_CPT_Brands', 'register'));
+		add_action('init', array('Alp_Nav_Api_CPT_Locations', 'register'));
 		$this->loader->run();
 	}
 

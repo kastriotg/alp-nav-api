@@ -5,6 +5,19 @@
 class Alp_Nav_Api_Admin_Brands {
     public static function register_ajax() {
         add_action('wp_ajax_alpnav_get_and_save_brands', [__CLASS__, 'ajax_get_and_save_brands']);
+        add_action('wp_ajax_alpnav_save_selected_brand', [__CLASS__, 'ajax_save_selected_brand']);
+    }
+    public static function ajax_save_selected_brand() {
+        check_ajax_referer('alpnav_save_selected_brand', 'nonce');
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error('Unauthorized');
+        }
+        $brand_id = isset($_POST['brand_id']) ? sanitize_text_field($_POST['brand_id']) : '';
+        if (!$brand_id) {
+            wp_send_json_error('No brand selected');
+        }
+        update_option('alpnav_selected_brand_id', $brand_id);
+        wp_send_json_success();
     }
 
     public static function ajax_get_and_save_brands() {
@@ -49,12 +62,16 @@ class Alp_Nav_Api_Admin_Brands {
         }
 
         $saved = [];
+        $processed_brand_ids = [];
         foreach ($brands as $brand) {
             // Map API keys to CPT keys
             $brand['brandId'] = isset($brand['brandID']) ? $brand['brandID'] : (isset($brand['brandId']) ? $brand['brandId'] : '');
             $brand['telephone'] = isset($brand['telephone']) ? strval($brand['telephone']) : '';
             // Check for required fields
             if (empty($brand['brandId']) || empty($brand['name'])) continue;
+            // Prevent duplicate processing in one run
+            if (in_array($brand['brandId'], $processed_brand_ids)) continue;
+            $processed_brand_ids[] = $brand['brandId'];
             // Find post with this brandId
             $existing = get_posts([
                 'post_type' => 'brand',
@@ -77,6 +94,10 @@ class Alp_Nav_Api_Admin_Brands {
                     'post_title' => $brand['name'],
                     'post_status' => 'publish',
                 ]);
+                // Set brandId meta immediately to prevent duplicate inserts
+                if ($post_id && !is_wp_error($post_id)) {
+                    update_post_meta($post_id, 'brandId', sanitize_text_field($brand['brandId']));
+                }
             }
             if ($post_id && !is_wp_error($post_id)) {
                 $fields = ['brandId', 'brand', 'name', 'website', 'email', 'telephone'];

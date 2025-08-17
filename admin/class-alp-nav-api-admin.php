@@ -62,16 +62,27 @@ class Alp_Nav_Api_Admin {
 			require_once plugin_dir_path(__FILE__) . 'class-alp-nav-api-admin-brands.php';
 			Alp_Nav_Api_Admin_Brands::register_ajax();
 		}
+		if (class_exists('Alp_Nav_Api_Admin_Locations')) {
+			Alp_Nav_Api_Admin_Locations::register_ajax();
+		} else {
+			require_once plugin_dir_path(__FILE__) . 'class-alp-nav-api-admin-locations.php';
+			Alp_Nav_Api_Admin_Locations::register_ajax();
+		}
 		add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
 	}
 
 	public function enqueue_admin_scripts($hook) {
-		// Only enqueue on our brands admin page
-		if ($hook === 'toplevel_page_alpnav-plugin-brands' || $hook === 'alpnav-plugin_page_alpnav-plugin-brands') {
+		// Only enqueue on our brands or areas admin page
+		if (
+			$hook === 'toplevel_page_alpnav-plugin-brands' || $hook === 'alpnav-plugin_page_alpnav-plugin-brands' ||
+			$hook === 'toplevel_page_alpnav-plugin-locations' || $hook === 'alpnav-plugin_page_alpnav-plugin-locations'
+		) {
 			wp_enqueue_script('alpnav-admin-js', plugin_dir_url(__FILE__) . 'js/alp-nav-api-admin.js', array('jquery'), null, true);
 			wp_localize_script('alpnav-admin-js', 'alpnavAdmin', array(
 				'ajax_url' => admin_url('admin-ajax.php'),
 				'nonce' => wp_create_nonce('alpnav_get_and_save_brands'),
+				'nonce_save_brand' => wp_create_nonce('alpnav_save_selected_brand'),
+				'nonce_get_and_save_locations' => wp_create_nonce('alpnav_get_and_save_locations'),
 			));
 		}
 	}
@@ -103,10 +114,22 @@ class Alp_Nav_Api_Admin {
 			'alpnav-plugin-brands',
 			array( $this, 'display_brands_admin_page' )
 		);
+		add_submenu_page(
+			'alpnav-plugin',
+			'Locations',
+			'Locations',
+			'manage_options',
+			'alpnav-plugin-locations',
+			array( $this, 'display_locations_admin_page' )
+		);
 	}
 
 	public function display_brands_admin_page() {
 		include plugin_dir_path(__FILE__) . 'partials/alp-nav-api-admin-brands.php';
+	}
+
+	public function display_locations_admin_page() {
+		include plugin_dir_path(__FILE__) . 'partials/alp-nav-api-admin-locations.php';
 	}
 
 	
