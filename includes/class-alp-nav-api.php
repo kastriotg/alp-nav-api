@@ -67,11 +67,27 @@ class Alp_Nav_Api {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
+		// ...existing code...
+		// Register custom Elementor category
+		add_action('elementor/elements/categories_registered', function($elements_manager) {
+			$elements_manager->add_category(
+				'anchorzup',
+				[
+					'title' => __('AnchorzUp', 'alp-nav-api'),
+					'icon' => 'fa fa-anchor',
+				]
+			);
+		});
 		if ( defined( 'ALP_NAV_API_VERSION' ) ) {
 			$this->version = ALP_NAV_API_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}
+		// Register Elementor widgets
+		add_action('elementor/widgets/register', function($widgets_manager) {
+			require_once plugin_dir_path(__FILE__) . 'elementor/class-banner-widget.php';
+			$widgets_manager->register(new \AlpNavApi\Elementor\Banner_Widget());
+		});
 		$this->plugin_name = 'alp-nav-api';
 
 		$this->load_dependencies();
