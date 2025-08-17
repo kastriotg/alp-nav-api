@@ -19,6 +19,35 @@ class Alp_Nav_Api_Admin_Brands {
             wp_send_json_error($response->get_error_message());
         }
         $brands = isset($response['data']) ? $response['data'] : $response;
+        // Cleanup: Remove all brands with missing or duplicate brandId meta
+        $all_brands = get_posts([
+            'post_type' => 'brand',
+            'post_status' => 'any',
+            'numberposts' => -1,
+            'fields' => 'ids'
+        ]);
+        $brandId_map = [];
+        foreach ($all_brands as $bid) {
+            $meta = get_post_meta($bid, 'brandId', true);
+            if (empty($meta)) {
+                wp_delete_post($bid, true);
+                continue;
+            }
+            if (!isset($brandId_map[$meta])) {
+                $brandId_map[$meta] = [$bid];
+            } else {
+                $brandId_map[$meta][] = $bid;
+            }
+        }
+        // Remove duplicates, keep only the first
+        foreach ($brandId_map as $meta => $ids) {
+            if (count($ids) > 1) {
+                foreach (array_slice($ids, 1) as $dup_id) {
+                    wp_delete_post($dup_id, true);
+                }
+            }
+        }
+
         $saved = [];
         foreach ($brands as $brand) {
             // Map API keys to CPT keys
@@ -26,22 +55,18 @@ class Alp_Nav_Api_Admin_Brands {
             $brand['telephone'] = isset($brand['telephone']) ? strval($brand['telephone']) : '';
             // Check for required fields
             if (empty($brand['brandId']) || empty($brand['name'])) continue;
-            // Find all posts with this brandId
+            // Find post with this brandId
             $existing = get_posts([
                 'post_type' => 'brand',
                 'meta_key' => 'brandId',
                 'meta_value' => $brand['brandId'],
                 'post_status' => 'any',
                 'fields' => 'ids',
-                'numberposts' => -1
+                'numberposts' => 1
             ]);
             $post_id = null;
             if ($existing && count($existing) > 0) {
-                // Keep the first, delete the rest
                 $post_id = $existing[0];
-                foreach (array_slice($existing, 1) as $dup_id) {
-                    wp_delete_post($dup_id, true);
-                }
                 wp_update_post([
                     'ID' => $post_id,
                     'post_title' => $brand['name'],
