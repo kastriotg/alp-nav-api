@@ -1,32 +1,23 @@
-(function( $ ) {
-	'use strict';
 
-	/**
-	 * All of the code for your admin-facing JavaScript source
-	 * should reside in this file.
-	 *
-	 * Note: It has been assumed you will write jQuery code here, so the
-	 * $ function reference has been prepared for usage within the scope
-	 * of this function.
-	 *
-	 * This enables you to define handlers, for when the DOM is ready:
-	 *
-	 * $(function() {
-	 *
-	 * });
-	 *
-	 * When the window is loaded:
-	 *
-	 * $( window ).load(function() {
-	 *
-	 * });
-	 *
-	 * ...and/or other possibilities.
-	 *
-	 * Ideally, it is not considered best practise to attach more than a
-	 * single DOM-ready or window-load handler for a particular page.
-	 * Although scripts in the WordPress core, Plugins and Themes may be
-	 * practising this, we should strive to set a better example in our own work.
-	 */
-
-})( jQuery );
+jQuery(function($){
+	$('#alpnav-get-brands').on('click', function(e){
+		e.preventDefault();
+		var $btn = $(this);
+		$btn.prop('disabled', true).text('Saving...');
+		$('#alpnav-brands-list').html('Processing...');
+		$.post(alpnavAdmin.ajax_url, {
+			action: 'alpnav_get_and_save_brands',
+			nonce: alpnavAdmin.nonce
+		}, function(resp){
+			if(resp.success){
+				$('#alpnav-brands-list').html('Saved ' + resp.data.count + ' brands.');
+			}else{
+				$('#alpnav-brands-list').html('<span style="color:red;">Error: ' + resp.data + '</span>');
+			}
+			$btn.prop('disabled', false).text('Get Brands');
+		}).fail(function(){
+			$('#alpnav-brands-list').html('<span style="color:red;">AJAX failed.</span>');
+			$btn.prop('disabled', false).text('Get Brands');
+		});
+	});
+});

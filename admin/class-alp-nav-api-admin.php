@@ -55,9 +55,27 @@ class Alp_Nav_Api_Admin {
 	public function __construct( $plugin_name, $version ) {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-	add_action('admin_menu', array($this, 'add_admin_menu'));
-	add_action('wp_ajax_alpnav_get_brands', array($this, 'ajax_import_brands'));
+		add_action('admin_menu', array($this, 'add_admin_menu'));
+		if (class_exists('Alp_Nav_Api_Admin_Brands')) {
+			Alp_Nav_Api_Admin_Brands::register_ajax();
+		} else {
+			require_once plugin_dir_path(__FILE__) . 'class-alp-nav-api-admin-brands.php';
+			Alp_Nav_Api_Admin_Brands::register_ajax();
+		}
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
 	}
+
+	public function enqueue_admin_scripts($hook) {
+		// Only enqueue on our brands admin page
+		if ($hook === 'toplevel_page_alpnav-plugin-brands' || $hook === 'alpnav-plugin_page_alpnav-plugin-brands') {
+			wp_enqueue_script('alpnav-admin-js', plugin_dir_url(__FILE__) . 'js/alp-nav-api-admin.js', array('jquery'), null, true);
+			wp_localize_script('alpnav-admin-js', 'alpnavAdmin', array(
+				'ajax_url' => admin_url('admin-ajax.php'),
+				'nonce' => wp_create_nonce('alpnav_get_and_save_brands'),
+			));
+		}
+	}
+
 
 	public function add_admin_menu() {
 		add_menu_page(
@@ -85,25 +103,6 @@ class Alp_Nav_Api_Admin {
 			'alpnav-plugin-brands',
 			array( $this, 'display_brands_admin_page' )
 		);
-	}
-
-
-	public function ajax_import_brands() {
-		// Check permissions
-		if (!current_user_can('manage_options')) {
-			wp_send_json_error('Permission denied');
-		}
-		// Import brands using the importer class
-		require_once plugin_dir_path(__DIR__) . 'api/brands/class-alp-nav-api-brands-importer.php';
-		$importer = new Alp_Nav_Api_Brands_Importer();
-		$result = $importer->import_brands();
-		if (is_array($result) && isset($result['success']) && $result['success']) {
-			wp_send_json_success('Brands imported successfully.');
-		} else {
-			$msg = is_array($result) && isset($result['message']) ? $result['message'] : 'Import failed.';
-			wp_send_json_error($msg);
-		}
-    
 	}
 
 	public function display_brands_admin_page() {
