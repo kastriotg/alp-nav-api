@@ -1,0 +1,177 @@
+.alpnav-banner-widget {
+    display: flex;
+    flex-direction: column;
+    gap: 250px;
+    padding: 20px 0;
+    background-position-x: 35%;
+    background-position-y: -206px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+    header{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        h1,h2{
+            padding: 0 22px;
+            margin: 0;
+        }
+        .banner_title {
+            font-size: 37px;
+        }
+        .banner_subtitle {
+            font-weight: 400;
+            font-size: 14px;
+        }
+    }
+
+    .transfer-form {
+        z-index: 1;
+        width: 90%;
+        background: rgba(0, 0, 0, 0.5); //  <-- semi-transparent
+        border-radius: 16px;
+        margin: 0 22px;
+        padding: 0 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        color: #3e3e3e;
+        hr{
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+        }
+        .type-transfer, .type-trip {
+            margin: 20px 0;
+            display: flex;
+            gap: 20px;
+            color: white;
+            .radio-container {
+                display: inline-flex;
+                align-items: center;
+                cursor: pointer;
+                position: relative;
+                input {
+                    position: absolute;
+                    opacity: 0;
+                }
+
+                .custom-radio {
+                    width: 18px;
+                    height: 18px;
+                    border: 2px solid #ff6a20;
+                    border-radius: 50%;
+                    margin-right: 8px;
+                    position: relative;
+                }
+
+                input:checked + .custom-radio::after {
+                    content: "";
+                    position: absolute;
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: #ff6a20;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+            }
+        }
+
+        .field,
+        .passengers {
+            background: #f6f6f6;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 14px;
+
+            .label {
+                font-size: 12px;
+                color: #9a9a9a;
+                margin-bottom: 4px;
+                display: flex;
+                align-items: center;
+                svg {
+                    margin-right: 5px;
+                }
+            }
+
+            .value {
+                font-size: 14px;
+                font-weight: 500;
+
+                &.dropdown {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+            }
+        }
+
+        .dates {
+            background: #ff6a20;
+            color: #fff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 14px;
+
+            .date-field {
+                display: flex;
+                flex-direction: column;
+
+                .label {
+                    font-size: 10px;
+                    opacity: 0.8;
+                    text-transform: uppercase;
+                    margin-bottom: 3px;
+                }
+
+                .value {
+                    font-size: 13px;
+                    font-weight: 600;
+
+                    &.time {
+                    margin-top: 2px;
+                    font-size: 12px;
+                    }
+                }
+            }
+        }
+
+        .search-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: 100%;
+            background: #ff6a20;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 0;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.25s;
+            margin-bottom: 20px;
+            &:hover {
+                opacity: 0.85;
+            }
+        }
+    }
+    .splasher {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 425px;
+        background: linear-gradient(1deg,rgba(255, 255, 255, 0.21) 0%, rgba(255, 164, 122, 0.79) 7%, rgba(255, 113, 47, 1) 18%, rgba(255, 113, 47, 1) 46%, rgba(245, 78, 0, 0.52) 78%, rgba(255, 255, 255, 0.05) 100%);
+    }
+ }
+
+ .page-header{
+    .entry-title{
+        display: none;
+    }
+ }

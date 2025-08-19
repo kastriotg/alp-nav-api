@@ -69,6 +69,6 @@ class Banner_Widget extends Widget_Base {
     }
     protected function render() {
         $settings = $this->get_settings_for_display();
-        include plugin_dir_path(__FILE__) . 'banner-widget-view.php';
+        include plugin_dir_path(dirname(__DIR__, 1)) . 'public/elementor/banner-widget-view.php';
     }
 }
