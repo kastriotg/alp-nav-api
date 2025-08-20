@@ -1,4 +1,4 @@
-(function( $ ) {
+document.addEventListener('DOMContentLoaded', function() {
 	'use strict';
 	function setBg(section) {
 	    var mobileUrl = section.getAttribute('data-mobile-url');
@@ -11,8 +11,29 @@
 	    var sections = document.querySelectorAll('.alpnav-banner-widget[data-mobile-url][data-wide-url]');
 	    sections.forEach(setBg);
 	}
-	document.addEventListener('DOMContentLoaded', function() {
-	    updateAll();
-	    window.addEventListener('resize', updateAll);
+
+	updateAll();
+	window.addEventListener('resize', updateAll);
+	
+	document.getElementById("departure-field").addEventListener("click", () => {
+		document.getElementById("airportModal").style.display = "block";
 	});
-})( jQuery );
+
+	document.querySelector(".modal .close").addEventListener("click", () => {
+		document.getElementById("airportModal").style.display = "none";
+	});
+
+	document.querySelectorAll("#airportModal li").forEach(item => {
+		item.addEventListener("click", function() {
+			let selectedAirport = this.textContent;
+			document.getElementById("departure-field").innerHTML = selectedAirport;
+			document.getElementById("airportModal").style.display = "none";
+		});
+	});
+
+	window.addEventListener("click", function(e) {
+		if (e.target.id === "airportModal") {
+			document.getElementById("airportModal").style.display = "none";
+		}
+	});
+});
