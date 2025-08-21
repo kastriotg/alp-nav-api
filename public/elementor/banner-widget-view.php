@@ -57,10 +57,11 @@ $img_alt = $banner_title ? $banner_title : ($banner_subtitle ? $banner_subtitle 
         <div class="field">
             <div >
                 <p class="label">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="18" viewBox="0 0 17 18" fill="none">
-                        <path d="M1.38892 15.804H15.2781M4.41675 12.6095L2.77783 12.3317L1.38892 9.5539L2.15282 9.17195C2.34668 9.07426 2.56075 9.02338 2.77783 9.02338C2.99492 9.02338 3.20898 9.07426 3.40284 9.17195L3.5209 9.2414C3.71477 9.33908 3.92883 9.38997 4.14591 9.38997C4.363 9.38997 4.57706 9.33908 4.77093 9.2414L5.55566 8.85944L3.47229 4.6927L4.0973 4.38019C4.32833 4.26654 4.5864 4.21934 4.8427 4.24387C5.099 4.26839 5.34344 4.36368 5.54872 4.51908L8.34044 6.60246C8.54644 6.7592 8.79214 6.85527 9.04982 6.87981C9.30751 6.90435 9.56692 6.85639 9.7988 6.74135L12.7086 5.31076C13.0802 5.12267 13.5088 5.08055 13.91 5.19271L14.5836 5.38715C14.7228 5.4258 14.8516 5.49498 14.9607 5.58966C15.0698 5.68434 15.1564 5.80213 15.2143 5.93449C15.2722 6.06684 15.2998 6.21042 15.2952 6.35479C15.2906 6.49917 15.2539 6.64071 15.1878 6.76912L14.9239 7.29691C14.7642 7.61636 14.5072 7.88026 14.1808 8.04693L5.26399 12.4706C5.0018 12.6005 4.70528 12.6442 4.41675 12.5956V12.6095Z" stroke="#FF712F" stroke-width="1.38892" stroke-linecap="round" stroke-linejoin="round"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                        <path d="M8.37337 14.4061C8.26457 14.4842 8.13399 14.5262 8.00004 14.5262C7.86608 14.5262 7.7355 14.4842 7.6267 14.4061C4.40737 12.1114 0.990703 7.3914 4.4447 3.98073C5.39293 3.04796 6.66993 2.52548 8.00004 2.52606C9.33337 2.52606 10.6127 3.0494 11.5554 3.98006C15.0094 7.39073 11.5927 12.1101 8.37337 14.4061Z" stroke="#FF712F" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M8.00008 8.52604C8.3537 8.52604 8.69284 8.38557 8.94289 8.13552C9.19294 7.88547 9.33341 7.54633 9.33341 7.19271C9.33341 6.83909 9.19294 6.49995 8.94289 6.2499C8.69284 5.99985 8.3537 5.85938 8.00008 5.85938C7.64646 5.85938 7.30732 5.99985 7.05727 6.2499C6.80722 6.49995 6.66675 6.83909 6.66675 7.19271C6.66675 7.54633 6.80722 7.88547 7.05727 8.13552C7.30732 8.38557 7.64646 8.52604 8.00008 8.52604Z" stroke="#FF712F" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    Airport
+                    Pickup Location
                 </p>
                 <div class="value" id="departure-field">Geneva Airport GVA</div>
             </div>
@@ -93,13 +94,19 @@ $img_alt = $banner_title ? $banner_title : ($banner_subtitle ? $banner_subtitle 
         <div class="dates">
             <div class="date-field">
                 <span class="label">Departure</span>
-                <span class="value">02/02/2026</span>
-                <span class="value time">17:40</span>
+                <div class="departure-time">
+                    <span class="value-date">02/02/2026</span>
+                    <span class="value-time">17:40</span>
+                </div>
+
             </div>
+            <div class="break"></div>
             <div class="date-field">
                 <span class="label">Return</span>
-                <span class="value">10/02/2026</span>
-                <span class="value time">07:15</span>
+                <div class="return-time">
+                    <span class="value-date">02/02/2026</span>
+                    <span class="value-time">17:40</span>
+                </div>
             </div>
         </div>
         <div class="field passengers">
@@ -128,4 +135,5 @@ $img_alt = $banner_title ? $banner_title : ($banner_subtitle ? $banner_subtitle 
 
     <div class="splasher"></div>
 </section>
-<?php include __DIR__ . '/partials/airport-modal.php'; ?>
+<?php include __DIR__ . '/partials/pickup-modal.php'; ?>
+<?php include __DIR__ . '/partials/destination-modal.php'; ?>

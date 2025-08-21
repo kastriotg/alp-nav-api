@@ -1,39 +1,44 @@
+import {backgroundImage} from '../modules/background-image.js';
+import { pickupSearchModal } from '../modules/pickupSearchModal.js';
+import { destinationSearchModal } from '../modules/destinationSearchModal.js';
+import { attachPickupHandlers } from '../modules/attachPickupHandlers.js';
+import { pickupModalCollapse } from '../modules/pickupModalCollapse.js';
+import { modalClose } from '../modules/modalClose.js';
+import { destinationModalCollapse } from '../modules/destinationModalCollapse.js';
+import { attachDestinationHandlers } from '../modules/attachDestinationHandlers.js';
 document.addEventListener('DOMContentLoaded', function() {
 	'use strict';
-	function setBg(section) {
-	    var mobileUrl = section.getAttribute('data-mobile-url');
-	    var wideUrl = section.getAttribute('data-wide-url');
-	    var w = window.innerWidth;
-	    var url = w > 768 && wideUrl ? wideUrl : mobileUrl;
-	    section.style.backgroundImage = url ? "url('" + url + "')" : 'none';
-	}
-	function updateAll() {
-	    var sections = document.querySelectorAll('.alpnav-banner-widget[data-mobile-url][data-wide-url]');
-	    sections.forEach(setBg);
-	}
+	backgroundImage();
 
-	updateAll();
-	window.addEventListener('resize', updateAll);
-	
-	document.getElementById("departure-field").addEventListener("click", () => {
-		document.getElementById("airportModal").style.display = "block";
+	document.getElementById("departure-field")?.addEventListener("click", () => {
+		document.getElementById("pickupModal").style.display = "block";
+		document.body.style.overflow = "hidden";
+		attachPickupHandlers();
 	});
 
-	document.querySelector(".modal .close").addEventListener("click", () => {
-		document.getElementById("airportModal").style.display = "none";
-	});
-
-	document.querySelectorAll("#airportModal li").forEach(item => {
-		item.addEventListener("click", function() {
-			let selectedAirport = this.textContent;
-			document.getElementById("departure-field").innerHTML = selectedAirport;
-			document.getElementById("airportModal").style.display = "none";
-		});
+	document.getElementById("destination-field")?.addEventListener("click", () => {
+		document.getElementById("destinationModal").style.display = "block";
+		document.body.style.overflow = "hidden";
+		attachDestinationHandlers();
 	});
 
 	window.addEventListener("click", function(e) {
-		if (e.target.id === "airportModal") {
-			document.getElementById("airportModal").style.display = "none";
+		if (e.target.id === "pickupModal") {
+			document.getElementById("pickupModal").style.display = "none";
+			document.body.style.overflow = "";
 		}
 	});
+
+	window.addEventListener("click", function(e) {
+		if (e.target.id === "destinationModal") {
+			document.getElementById("destinationModal").style.display = "none";
+			document.body.style.overflow = "";
+		}
+	});
+
+	modalClose();
+	pickupModalCollapse();
+	destinationModalCollapse();
+	pickupSearchModal();
+	destinationSearchModal();
 });

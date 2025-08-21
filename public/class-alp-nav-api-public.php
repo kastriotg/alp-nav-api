@@ -83,21 +83,18 @@ class Alp_Nav_Api_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/dist/alp-nav-api-public.js', array(), $this->version, false );
+		add_filter( 'script_loader_tag', array( $this, 'add_module_type_to_script' ), 10, 2 );
+	}
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Alp_Nav_Api_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Alp_Nav_Api_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/dist/alp-nav-api-public.js', array( 'jquery' ), $this->version, false );
-
+	/**
+	 * Add type="module" to the public JS script tag for ES module support
+	 */
+	public function add_module_type_to_script( $tag, $handle ) {
+		if ( $handle === $this->plugin_name ) {
+			return str_replace( '<script ', '<script type="module" ', $tag );
+		}
+		return $tag;
 	}
 
 }
